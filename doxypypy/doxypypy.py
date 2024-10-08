@@ -1047,6 +1047,11 @@ def main():
                  "With this option decorators are kept before it's definition string"
                  "(function or class names). But this requires dogygen 1.9 or higher."
         )
+        parser.add_argument(
+            "-p", "--output-encoding",
+            action="store", type=str , dest="output_encoding",default="utf-8",
+            help="Specify the encoding format for the output"
+            )
         group = parser.add_argument_group("Debug Options")
         group.add_argument(
             "-d", "--debug",
@@ -1108,6 +1113,7 @@ def main():
     # There is a "feature" in print on Windows. If linesep is
     # passed, it will generate 0x0D 0x0D 0x0A each line which
     # screws up Doxygen since it's expected 0x0D 0x0A line endings.
+    sys.stdout = codecs.getwriter(args.output_encoding)(sys.stdout.detach())
     for line in astWalker.getLines().split(linesep):
         print(line.rstrip())
 
